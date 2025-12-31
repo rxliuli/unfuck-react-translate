@@ -1,37 +1,25 @@
 import { defineConfig, UserManifest } from 'wxt'
-import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  modules: ['@wxt-dev/module-react'],
-  vite: () => ({
-    plugins: [tailwindcss()] as any,
-    resolve: {
-      alias: {
-        '@': __dirname,
-      },
-    },
-  }),
   manifestVersion: 3,
   manifest: (env) => {
     const manifest: UserManifest = {
-      name: 'Browser Extension Template',
+      name: 'Unfuck React Translate',
       description:
-        'A template for WXT, a WebExtension framework based on Vite and React',
-      permissions: ['storage'],
+        'Automatically wrap text nodes created by React in a span for better translation support.',
+      permissions: ['scripting', 'activeTab'],
       host_permissions: ['<all_urls>'],
+      web_accessible_resources: [
+        {
+          matches: ['<all_urls>'],
+          resources: ['inject.js'],
+        },
+      ],
       author: {
         email: 'rxliuli@gmail.com',
       },
-      action: {
-        default_icon: {
-          '16': 'icon/16.png',
-          '32': 'icon/32.png',
-          '48': 'icon/48.png',
-          '96': 'icon/96.png',
-          '128': 'icon/128.png',
-        },
-      },
-      homepage_url: 'https://rxliuli.com/project/browser-extension-template',
+      action: {},
+      homepage_url: 'https://rxliuli.com/project/unfuck-react-translate',
     }
     if (env.browser === 'firefox') {
       manifest.browser_specific_settings = {

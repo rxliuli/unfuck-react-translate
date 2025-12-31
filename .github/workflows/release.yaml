@@ -1,6 +1,6 @@
 env:
   DIRECTORY: .
-  PROJECT_NAME: browser-extension-template
+  PROJECT_NAME: unfuck-react-translate
 
 name: Release
 

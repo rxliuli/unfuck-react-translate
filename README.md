@@ -1,59 +1,69 @@
-# Browser Extension Template
+# Unfuck React Translate
 
-A modern browser extension development template built with React, Shadcn/ui, and WXT. Supports building cross-browser extensions compatible with Chrome, Edge, Firefox, and Safari (requires macOS).
+Fix React SSR hydration errors when using browser translation tools.
 
-## Getting Started
+## Problem
 
-### Initialize Project
+Browser translation tools wrap text nodes in `<font>` tags, causing React to detect DOM structure mismatches during hydration and throw errors.
 
-```sh
-git clone https://github.com/<your-github-username>/<your-project-name>.git
-cd <your-project-name>
-pnpm i
-pnpm init-project
+Common error message:
+
+```text
+Application error: a client-side exception has occurred (see the browser console for more information).
 ```
 
-Follow the prompts to enter your project name and complete the initialization.
+Related discussions:
+
+- <https://github.com/facebook/react/issues/28554>
+- <https://dev.to/ivanturashov/preventing-react-crashes-handling-google-translate-5bi0>
+- <https://github.com/facebook/react/issues/11538>
+
+## Usage
+
+1. Install the extension
+2. Open the webpage you want to translate
+3. Click the extension icon to enable
+4. Use browser translation as normal
+
+Click the icon to toggle the current website's status. Badge shows "ON" when enabled.
+
+## Installation
+
+Manual installation required:
+
+1. Download or build the extension zip file
+2. Open browser extensions page
+3. Enable developer mode
+4. Drag and drop the zip file to install
 
 ## Development
 
-Chrome is used as the baseline version for development. Edge, Firefox, and Safari builds are only created when needed for publishing, testing, or debugging platform-specific issues.
-
-### Start Development Server
-
 ```sh
+pnpm install
 pnpm dev
 ```
 
-After running the development server:
-1. Navigate to the `*.output/chrome-mv3-dev` directory to find the compiled extension files
-2. Open `chrome://extensions` in Chrome
-3. Enable "Developer mode"
-4. Drag and drop the output directory to load the extension for debugging
+Development build outputs to `.output/chrome-mv3-dev` directory. Load this directory at `chrome://extensions`.
 
-## Build & Package
-
-### Chrome, Edge, and Firefox
-
-Generate production builds and create zip files for distribution:
+## Build
 
 ```sh
-pnpm zip && pnpm zip:firefox
+# Chrome/Edge
+pnpm zip
+
+# Firefox
+pnpm zip:firefox
+
+# Safari (requires macOS and Xcode)
+pnpm build:safari
 ```
 
-### Safari
+For Safari builds, configure your `DEVELOPMENT_TEAM` ID in `.env.local`.
 
-Safari extension requires macOS environment and Xcode for building and publishing.
+## How It Works
 
-#### Build Steps:
+Patches `Document.prototype.createTextNode` to automatically wrap text nodes in span elements, preventing browser translation tools from breaking React hydration.
 
-1. Create a `.env.local` file and add your `DEVELOPMENT_TEAM` ID
-2. Run `pnpm build:safari` - this will automatically build and open Xcode
-3. Build the project in Xcode and test in Safari
-4. To publish: In Xcode, select **Product → Archive** to submit to the App Store
+## License
 
-## Requirements
-
-- Node.js (latest LTS recommended)
-- pnpm package manager
-- macOS with Xcode (for Safari development only)
+GPL-3.0 License
